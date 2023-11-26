@@ -5,36 +5,39 @@
 namespace NS_services
 {
 	using namespace System;
-
-	CLserviceFichier::CLserviceFichier()
-	{
-		//this->fichier = gcnew NS_composants::CLfichier();
-	}
-	void CLserviceFichier::copier(array<String^>^ fichiersSources, String^ destination)
+	String^ CLserviceFichier::copier(array<String^>^ fichiersSources, String^ destination)
 	{
 		int i;
 		i = 0;
 		for (i = 0; i < fichiersSources->Length; i++)
 		{
-			NS_composants::CLfichier::copier(fichiersSources[i], destination);
+			String^ res = NS_composants::CLfichier::copier(fichiersSources[i], destination);
+			if (res != nullptr)
+				return res;
 		}
+		return nullptr;
 	}
-	void CLserviceFichier::copierEffacer(array<String^>^ fichiersSources, String^ fichierDestination)
+	String^ CLserviceFichier::copierEffacer(array<String^>^ fichiersSources, String^ fichierDestination)
 	{
 		
-		this->copier(fichiersSources, fichierDestination);
-		this->effacer(fichiersSources);
+		String^ res = copier(fichiersSources, fichierDestination);
+		if (res != nullptr)
+			return res;
+		res = effacer(fichiersSources);
+		return res;
 	}
 
-	void CLserviceFichier::effacer(array<String^>^ fichiersSources)
+	String^ CLserviceFichier::effacer(array<String^>^ fichiersSources)
 	{
 		int i;
 		i = 0;
 		for (i = 0; i < fichiersSources->Length; i++)
 		{
-			NS_composants::CLfichier::effacer(fichiersSources[i]);
+			String^ res = NS_composants::CLfichier::effacer(fichiersSources[i]);
+			if (res != nullptr)
+				return res;
 		}
-
+		return nullptr;
 	}
 	array<String^>^ CLserviceFichier::explorer(String^ dossier)
 	{

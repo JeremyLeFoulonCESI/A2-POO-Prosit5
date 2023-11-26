@@ -15,9 +15,9 @@ namespace NS_composants
 
 		static array<String^>^ explorerUnDossier(String^);
 
-		static void effacer(String^);
+		static String^ effacer(String^);
 
-		static void copier(String^, String^);
+		static String^ copier(String^, String^);
 
 	};
 

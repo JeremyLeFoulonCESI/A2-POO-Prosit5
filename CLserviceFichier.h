@@ -9,24 +9,15 @@ namespace NS_services
 	using namespace System;
 
 	ref class CLserviceFichier
-
 	{
-
-	private:
-
-		//NS_composants::CLfichier^ fichier;
-
 	public:
+		static String^ copier(array<String^>^, String^);
 
-		CLserviceFichier();
+		static String^ copierEffacer(array<String^>^, String^);
 
-		void copier(array<String^>^, String^);
+		static String^ effacer(array<String^>^);
 
-		void copierEffacer(array<String^>^, String^);
-
-		void effacer(array<String^>^);
-
-		array<String^>^ explorer(String^);
+		static array<String^>^ explorer(String^);
 
 	};
 

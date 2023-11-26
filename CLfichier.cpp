@@ -14,24 +14,30 @@ namespace NS_composants
         return Directory::GetFiles(dossier);
     }
 
-    void CLfichier::effacer(String^ fichier)
+    String^ CLfichier::effacer(String^ fichier)
 
     {
-
-        File::Delete(fichier);
-
+        try {
+            File::Delete(fichier);
+        }
+        catch (System::Exception^ e) {
+            return e->Message;
+        }
+        return nullptr;
     }
 
-    void CLfichier::copier(String^ fichierSource, String^ fichierDestination)
-
+    String^ CLfichier::copier(String^ fichierSource, String^ fichierDestination)
     {
-
         String^ nomDeFichierExtension;
 
         nomDeFichierExtension = Path::GetFileName(fichierSource);
-
-        File::Copy(fichierSource, fichierDestination + "\\" + nomDeFichierExtension);
-
+        try {
+            File::Copy(fichierSource, fichierDestination + "\\" + nomDeFichierExtension);
+        }
+        catch (System::IO::IOException^ e) {
+            return e->Message;
+        }
+        return nullptr;
     }
 
 }

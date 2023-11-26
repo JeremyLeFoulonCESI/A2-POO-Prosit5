@@ -54,10 +54,8 @@ namespace testWin {
 		Label^ lbl_resultats;
 		FolderBrowserDialog^ fld_source;
 		FolderBrowserDialog^ fld_destination;
-		System::ComponentModel::Container^ components;
+		//System::ComponentModel::Container^ components;
 		array<String^>^ listeDeFichier;
-		NS_services::CLserviceImage^ image;
-		NS_services::CLserviceFichier^ svcFichier;
 		int index;
 		int nombreImages;
 
@@ -70,21 +68,12 @@ namespace testWin {
 		void btn_next_Click(Object^ sender, EventArgs^ e);
 		void btn_previous_Click(Object^ sender, EventArgs^ e);
 		void btn_last_Click(Object^ sender, EventArgs^ e);
+		void MyForm_exit(Object^ sender, EventArgs^ e);
+
+		void erreur_fichier(String^ msg);
 
 	public:
 		MyForm(void);
 		void InitializeComponent(void);
-
-
-	protected:
-
-		/// <summary> 
-
-		/// Nettoyage des ressources utilisées. 
-
-		/// </summary> 
-
-		~MyForm();
-
 	};
 }

@@ -364,6 +364,8 @@ namespace testWin {
 
 		this->Load += gcnew System::EventHandler(this, &MyForm::MyForm_Load);
 
+		this->Closed += gcnew EventHandler(this, &MyForm::MyForm_exit);
+
 		(cli::safe_cast<System::ComponentModel::ISupportInitialize^>(this->pctBx))->EndInit();
 
 		this->gpBox_typeProcessus->ResumeLayout(false);
@@ -380,28 +382,33 @@ namespace testWin {
 		this->index = 0;
 		this->nombreImages = 0;
 	}
+	void MyForm::MyForm_exit(Object^ sender, EventArgs^ e) {
+		Application::ExitThread();
+	}
 	void MyForm::btn_source_Click(Object^ sender, EventArgs^ e)
 	{
 		int i;
-
-		this->image = gcnew NS_services::CLserviceImage();
 
 		this->fld_source->ShowDialog();
 
 		this->txt_source->Text = this->fld_source->SelectedPath;
 
-		this->listeDeFichier = this->svcFichier->explorer(this->txt_source->Text);
+		this->listeDeFichier = NS_services::CLserviceFichier::explorer(this->txt_source->Text);
 
+		this->txt_rslt->Text = "";
 		for (i = 0; i < this->listeDeFichier->Length; i++)
 		{
 			this->txt_rslt->Text += this->listeDeFichier[i] + "\r\n";
 		}
 
 		try {
-			this->pctBx->Image = image->lireImage(this->listeDeFichier[this->index]);
+			this->pctBx->Image = NS_services::CLserviceImage::lireImage(this->listeDeFichier[this->index]);
 		}
 		catch (System::ArgumentException^ e) {
 			this->listeDeFichier = nullptr;
+		}
+		catch (System::IndexOutOfRangeException^ e) {
+			this->pctBx->Image = nullptr;
 		}
 	}
 	void MyForm::btn_destination_Click(Object^ sender, EventArgs^ e)
@@ -414,20 +421,36 @@ namespace testWin {
 		if (!this->listeDeFichier)
 			return;
 		this->index = 0;
-		this->pctBx->Image = image->lireImage(this->listeDeFichier[this->index]);
+		this->pctBx->Image = NS_services::CLserviceImage::lireImage(this->listeDeFichier[this->index]);
 	}
 	void MyForm::btn_proceder_Click(Object^ sender, EventArgs^ e)
 	{
-		if (this->rdb_copier->Checked == true)
+		String^ res;
+		if (this->rdb_copier->Checked)
 		{
-			this->svcFichier->copier(this->listeDeFichier, this->txt_destination->Text);
-			this->txt_rslt->Clear();
-			this->txt_rslt->Text = "Les fichiers ont été copier dans le dossier : " + this->txt_destination->Text;
+			res = NS_services::CLserviceFichier::copier(this->listeDeFichier, this->txt_destination->Text);
+			if (res != nullptr) {
+				this->erreur_fichier(res);
+				return;
+			}
+			this->txt_rslt->Text = "Les fichiers ont été copiés dans le dossier : " + this->txt_destination->Text;
 		}
-		else if (this->rdb_coiperEffacer->Checked == true)
+		else if (this->rdb_coiperEffacer->Checked)
 		{
-			this->svcFichier->copierEffacer(this->listeDeFichier, this->txt_destination->Text);
-			this->txt_rslt->Text = "Les fichiers ont été copies dans le dossier : " + this->txt_destination->Text;
+			res = NS_services::CLserviceFichier::copierEffacer(this->listeDeFichier, this->txt_destination->Text);
+			if (res != nullptr) {
+				this->erreur_fichier(res);
+				return;
+			}
+			this->txt_rslt->Text = "Les fichiers ont été copiés dans le dossier : " + this->txt_destination->Text;
+		}
+		else if (this->rdb_effacer->Checked) {
+			NS_services::CLserviceFichier::effacer(this->listeDeFichier);
+			if (res != nullptr) {
+				this->erreur_fichier(res);
+				return;
+			}
+			this->txt_rslt->Text = "Les fichiers source sélectionnés ont bien été effacés.";
 		}
 	}
 
@@ -438,7 +461,7 @@ namespace testWin {
 		if (this->index < this->listeDeFichier->Length - 1)
 		{
 			this->index++;
-			this->pctBx->Image = image->lireImage(this->listeDeFichier[this->index]);
+			this->pctBx->Image = NS_services::CLserviceImage::lireImage(this->listeDeFichier[this->index]);
 		}
 	}
 	void MyForm::btn_previous_Click(Object^ sender, EventArgs^ e)
@@ -448,7 +471,7 @@ namespace testWin {
 		if (this->index > 0)
 		{
 			this->index--;
-			this->pctBx->Image = image->lireImage(this->listeDeFichier[this->index]);
+			this->pctBx->Image = NS_services::CLserviceImage::lireImage(this->listeDeFichier[this->index]);
 		}
 	}
 	void MyForm::btn_last_Click(Object^ sender, EventArgs^ e)
@@ -456,13 +479,10 @@ namespace testWin {
 		if (!this->listeDeFichier)
 			return;
 		this->index = this->listeDeFichier->Length - 1;
-		this->pctBx->Image = image->lireImage(this->listeDeFichier[this->index]);
+		this->pctBx->Image = NS_services::CLserviceImage::lireImage(this->listeDeFichier[this->index]);
 	}
-	MyForm::~MyForm(void) {
-		if (components)
-		{
-			delete components;
-		}
+	void MyForm::erreur_fichier(String^ msg) {
+		this->txt_rslt->Text = "Erreur: " + msg + "\r\n";
 	}
 }
 
