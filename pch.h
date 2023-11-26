@@ -7,6 +7,11 @@
 #ifndef PCH_H
 #define PCH_H
 
-// add headers that you want to pre-compile here
+// add headers that you want to pre-compile 
+#include "CLfichier.h"
+#include "CLimages.h"
+#include "CLserviceFichier.h"
+#include "CLserviceImage.h"
+#include "MyForm.h"
 
 #endif //PCH_H
