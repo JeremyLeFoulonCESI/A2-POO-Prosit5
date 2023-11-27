@@ -6,3 +6,6 @@ My attempt at solving the 5th prosit of the OOP project.
 
 **Class diagram:**\
 ![](classes.png)
+
+**Sequence diagram:**\
+![](sequence.png)
